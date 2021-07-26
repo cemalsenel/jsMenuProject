@@ -71,20 +71,29 @@ const menu = [
     img: "./images/item-9.jpeg",
     desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
   },
+  {
+    id: 10,
+    title: "bison steak",
+    category: "dinner",
+    price: 22.99,
+    img: "./images/item-10.jpeg",
+    desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
+  },
 ];
 
 window.addEventListener("DOMContentLoaded", function () {
-  displayMenuItems();
+  displayMenuItems(menu);
+  displayCategoryItems();
 });
 
+const sectionElement = document.querySelector(".section-center");
+const categoryElement = document.querySelector(".btn-container");
 
-const sectionElement = document.querySelector('.section-center');
-const categoryElement = document.querySelector('.btn-container');
-
-function displayMenuItems() {
+function displayMenuItems(menuList) {
   let sectionContent = "";
 
-  menu.forEach((item) => {
+  // map ile ?
+  menuList.forEach((item) => {
     sectionContent += `<article class="menu-item">
         <img src=${item.img} alt="menu item" class="photo" />
         <div class="item-info">
@@ -97,10 +106,47 @@ function displayMenuItems() {
           </p>
         </div>
       </article>`;
-    });
-    sectionElement.innerHTML = sectionContent;
+  });
+  sectionElement.innerHTML = sectionContent;
 }
 
-function displayCategoryItems(){
+function displayCategoryItems() {
+  let categories = [];
+  let categoryContent = `<button type="button" class="filter-btn" data-id="all">all</button>`;
 
+  menu.forEach((item) => {
+    const foodIndex = categories.indexOf(item.category);
+    if (foodIndex === -1) {
+      categories.push(item.category);
+    }
+  });
+
+  categories.forEach((category) => {
+    categoryContent += `<button type="button" class="filter-btn" data-id="${category}">${category}</button>`;
+  });
+
+  categoryElement.innerHTML = categoryContent;
+
+  // =============
+
+  const filterButtons = document.querySelectorAll(".filter-btn");
+
+  filterButtons.forEach((button) => {
+    // event
+    button.addEventListener("click", function (e) {
+      // Yemek filtreleme işlemi gerçekleşecek.
+      const selectedCategoryName = e.target.getAttribute("data-id");
+      const filteredMenu = menu.filter(
+        (item) => item.category === selectedCategoryName
+      );
+
+      console.log("selectedCategoryName: " + selectedCategoryName);
+
+      if (selectedCategoryName == "all") {
+        displayMenuItems(menu);
+      } else {
+        displayMenuItems(filteredMenu);
+      }
+    });
+  });
 }
